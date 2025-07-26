@@ -35,7 +35,7 @@ You can add income and expenses, view your balance, and list transactions with d
 
 ## Notes
 
-- I initially brainstormed the idea with **ChatGPT**, and used **Claude** to generate the first version of the code.I then custimozed some minor things myself.
+- I initially brainstormed the idea with **ChatGPT**, and used **Claude** to generate the first version of the code. I then custimozed some minor things myself.
 - This is part of my personal learning journey as a CS student interested in Python, finance, and software design.
 
 
