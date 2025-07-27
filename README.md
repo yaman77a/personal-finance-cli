@@ -10,7 +10,8 @@ You can add income and expenses, view your balance, and list transactions with d
 - [x] Add income and expenses with descriptions
 - [x] View all transactions with descriptions
 - [x] See current balance
-- [] Monthly/Yearly balance (coming soon)
+- [x] Monthly balance
+- [] Yearly balance (coming soon)
 - [] Expense category statistics (planned)
 - [] Visulation with matplotlib (planned)
 - [] Regular monthly expenses and incomes (planned)
@@ -24,12 +25,13 @@ You can add income and expenses, view your balance, and list transactions with d
 ## Project Info
 
 - Written in **Python 3**
-- Data is saved locally in 'transaction.json'
+- Data is saved locally in 'transaction.json' and 'monthly_summary.json'
 - Terminal inerface only (CLI) for now
-- Organized into 3 modules:
+- Organized into 4 modules:
     - 'main.py' -> user interaction 
     - 'models.py' -> transaction class
     - 'data_manager.py' -> JSON file handling (read/write)
+    - 'summary_manager.py' -> handle monthly summaries
 
 ---
 
