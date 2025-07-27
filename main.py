@@ -4,6 +4,8 @@ from models import Transaction
 from data_manager import DataManager
 from summary_manager import SummaryManager
 summary_manager = SummaryManager()
+from settings_manager import SettingsManager
+settings_manager = SettingsManager()
 
 class PersonalFinanceApp:
     """
@@ -28,7 +30,8 @@ class PersonalFinanceApp:
         print("3. View Transactions")
         print("4. Balance Status")
         print("5. Monthly Summary(current month)")
-        print("6. Exit")
+        print("6. Set Monthly Limit")
+        print("7. Exit")
         print("="*50)
     
     def get_transaction_input(self, transaction_type: str) -> Transaction:
@@ -83,6 +86,14 @@ class PersonalFinanceApp:
                 print("\n❌ An error occurred while adding expense!")
         except Exception as e:
             print(f"\n❌ Error: {e}")
+        # Limit control
+        from datetime import datetime
+        current_month = datetime.now().strftime("%Y-%m")
+        monthly_summary = summary_manager.get_summary(current_month)
+        limit = settings_manager.get_monthly_limit()
+
+        if limit > 0 and monthly_summary["expense"] > limit:
+            print(f"\n⚠️ Warning: You have exceeded your monthly limit of {limit:,.2f} TL!")
         
         input("\nPress Enter to continue...")
     
@@ -161,7 +172,21 @@ class PersonalFinanceApp:
         print("=" * 40)
 
         input("\nPress Enter to continue...")    
-    
+
+    def set_monthly_limit(self):
+        """Set or update the monthly spending limit"""
+        print("\n⚙️  Set Monthly Spending Limit")
+        print("-" * 40)
+        try:
+            limit = float(input("Enter new monthly limit (TL): "))
+            if settings_manager.set_monthly_limit(limit):
+                print(f"\n✅ Monthly limit set to {limit:,.2f} TL")
+            else:
+                print("\n❌ Failed to update monthly limit.")
+        except ValueError:
+            print("\n❌ Invalid input. Please enter a number.")
+        input("\nPress Enter to continue...")
+
     def run(self):
         """Run the application"""
         print("Starting Personal Finance Application...")
@@ -171,7 +196,7 @@ class PersonalFinanceApp:
             self.display_menu()
             
             try:
-                choice = input("\nMake your choice (1-5): ").strip()
+                choice = input("\nMake your choice (1-7): ").strip()
                 
                 if choice == "1":
                     self.add_income()
@@ -184,10 +209,12 @@ class PersonalFinanceApp:
                 elif choice == "5":
                     self.display_monthly_summary()
                 elif choice == "6":
+                    self.set_monthly_limit()
+                elif choice == "7":
                     print("\n👋 Exiting application. Have a good day!")
                     self.running = False
                 else:
-                    print("\n❌ Invalid choice! Please enter a number between 1-5.")
+                    print("\n❌ Invalid choice! Please enter a number between 1-7.")
                     input("Press Enter to continue...")
                     
             except KeyboardInterrupt:

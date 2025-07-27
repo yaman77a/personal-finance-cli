@@ -2,3 +2,4 @@ __pycache__/
 transactions.json
 *.pyc
 monthly_summary.json
+settings.json
