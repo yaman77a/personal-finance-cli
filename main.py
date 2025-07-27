@@ -2,6 +2,8 @@ import os
 import sys
 from models import Transaction
 from data_manager import DataManager
+from summary_manager import SummaryManager
+summary_manager = SummaryManager()
 
 class PersonalFinanceApp:
     """
@@ -25,7 +27,8 @@ class PersonalFinanceApp:
         print("2. Add Expense")
         print("3. View Transactions")
         print("4. Balance Status")
-        print("5. Exit")
+        print("5. Monthly Summary(current month)")
+        print("6. Exit")
         print("="*50)
     
     def get_transaction_input(self, transaction_type: str) -> Transaction:
@@ -61,6 +64,7 @@ class PersonalFinanceApp:
             transaction = self.get_transaction_input("income")
             if self.data_manager.add_transaction(transaction):
                 print(f"\n✅ Income successfully added: {transaction.amount} TL")
+                summary_manager.update_summary(transaction)
             else:
                 print("\n❌ An error occurred while adding income!")
         except Exception as e:
@@ -74,6 +78,7 @@ class PersonalFinanceApp:
             transaction = self.get_transaction_input("expense")
             if self.data_manager.add_transaction(transaction):
                 print(f"\n✅ Expense successfully added: {transaction.amount} TL")
+                summary_manager.update_summary(transaction)
             else:
                 print("\n❌ An error occurred while adding expense!")
         except Exception as e:
@@ -137,6 +142,26 @@ class PersonalFinanceApp:
         
         input("\nPress Enter to continue...")
     
+    def display_monthly_summary(self):
+        """Display income, expense and net total for current month"""
+        from datetime import datetime
+        current_month = datetime.now().strftime("%Y-%m")
+        summary = summary_manager.get_summary(current_month)
+
+        print(f"\n📆 Monthly Summary - {current_month}")
+        print("=" * 40)
+        print(f"💰 Income : {summary['income']:,.2f} TL")
+        print(f"💸 Expense: {summary['expense']:,.2f} TL")
+    
+        net = summary["net"]
+        if net >= 0:
+            print(f"📊 Net     : +{net:,.2f} TL ✅")
+        else:
+            print(f"📊 Net     : {net:,.2f} TL ❌")
+        print("=" * 40)
+
+        input("\nPress Enter to continue...")    
+    
     def run(self):
         """Run the application"""
         print("Starting Personal Finance Application...")
@@ -157,6 +182,8 @@ class PersonalFinanceApp:
                 elif choice == "4":
                     self.display_balance()
                 elif choice == "5":
+                    self.display_monthly_summary()
+                elif choice == "6":
                     print("\n👋 Exiting application. Have a good day!")
                     self.running = False
                 else:
